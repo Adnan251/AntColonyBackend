@@ -20,7 +20,7 @@ async function register (req, res, next){
     }
     catch(e){
         console.log(e);
-        res.status(500).send({error: "Error Creating User"});
+        res.status(500);
         res.end("Error creating user");
     }
 };
@@ -36,14 +36,14 @@ async function login (req, res, next){
         email: loginInfo.email
     }).select('+password');
     if (!loginUser) {
-        res.status(404).send({error: "User Not Found"});
+        res.status(404);
         return res.end("Not found")
     }
     else {
         const passwordMatches = await loginUser.comparePassword(loginInfo.password);
         if (!passwordMatches) {
             console.log("Incorrect password");
-            res.status(401).send({error: "Incorrect Password"});
+            res.status(401);
             return res.end('Incorrect password');
         }
         loginUser.password = undefined;
