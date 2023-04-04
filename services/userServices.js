@@ -23,16 +23,6 @@ async function register (req, res, next){
         res.status(500);
         res.end("Error creating user");
     }
-
-    const loginUser = await Users.findOne({
-        email: loginInfo.email
-    }).select('+password');
-    if (!loginUser) {
-        res.status(404);
-        return res.end("Not found")
-    }
-
-
 };
 
 async function login (req, res, next){
