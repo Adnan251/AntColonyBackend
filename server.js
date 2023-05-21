@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const dotenv = require("dotenv").config();
 const authJWT = require('./middleware/authJWT')
 const userRoutes = require('./routes/userRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 
 const app = express();
 
@@ -13,9 +14,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-app.all('*', authJWT.verifyUserToken);
+//app.all('*', authJWT.verifyUserToken);
 
 app.use("/api/users", userRoutes);
+app.use("/api/project", projectRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log("PORT: " + process.env.PORT);
