@@ -24,7 +24,7 @@ async function addProject(req, res, next){
                         case "language":
                             input = pipeline[step][nestedS].script;
                             pip = await Pipeline.create({
-                                name: `{$step} language`,
+                                name: `${step} language`,
                                 script: input
                             });
                             await Project.findOneAndUpdate(
@@ -34,7 +34,7 @@ async function addProject(req, res, next){
                         case "docker":
                             input = pipeline[step][nestedS].script;
                             pip = await Pipeline.create({
-                                name: `{$step} docker`,
+                                name: `${step} docker`,
                                 script: input
                             });
                             await Project.findOneAndUpdate(
@@ -44,7 +44,7 @@ async function addProject(req, res, next){
                         case "script":
                             input = pipeline[step][nestedS].script;
                             pip = await Pipeline.create({
-                                name: `{$step} script`,
+                                name: `${step} script`,
                                 script: input
                             });
                             await Project.findOneAndUpdate(
@@ -67,7 +67,7 @@ async function addProject(req, res, next){
             }
         }
         const allProjects = await User.findById(req.body._id);
-        res.status(200).send(allProjects.projects);
+        res.status(200).send("Success");
     }
     catch(e){
         console.log(e);
@@ -78,14 +78,13 @@ async function addProject(req, res, next){
 
 async function deleteProject (req, res, next){
     try{
-        const project = await Project.findById(req.body.project_id);
+        const project = await Project.findOneById(req.body.project_id);
         const list = project.segments;
-        console.log(list);
         await Pipeline.deleteMany({_id: {$in: list}});
         await Project.findByIdAndDelete(req.body.project_id);
         await User.findByIdAndUpdate({_id: req.body.user_id}, {$pull: { projects: req.body.project_id }});
         const user = User.findById(req.body.user_id);
-        res.status(200).send(user);
+        res.status(200).send("Success");
     }
     catch(e){
         console.log(e);

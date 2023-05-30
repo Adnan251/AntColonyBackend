@@ -5,6 +5,7 @@ const dotenv = require("dotenv").config();
 const authJWT = require('./middleware/authJWT')
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const pipeRoutes = require('./routes/pipeRoutes');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cors());
 
 app.use("/api/users", userRoutes);
 app.use("/api/project", projectRoutes);
+app.use("/api/pipe", pipeRoutes);
 
 app.listen(process.env.PORT, () => {
     console.log("PORT: " + process.env.PORT);
