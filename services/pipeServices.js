@@ -26,7 +26,7 @@ async function executePipe (req, res, next){
             }
         }
         else{
-            const dir = path.join(__dirname, '../projects', req.body.name);
+            const dir = path.join(__dirname, '..', 'projects', req.body.name);
             process.chdir(dir);
             exec(pipe.script, (error, stfout, stderr) => {
                 if(error){
