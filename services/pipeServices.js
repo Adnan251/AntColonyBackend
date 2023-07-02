@@ -6,19 +6,24 @@ const { exec } = require('child_process');
 
 async function executePipe (req, res, next){
     try{
-        const pipe = Pipe.findById(req.body.id);
+        const pipe = await Pipe.findById({_id : req.body.id});
         if (pipe.name == "repo"){
-            const dir = path.join(__dirname, '../..', 'projects', req.body.name);
-            simpleGit().clone(pipe.script, dir).then(() => {
-                const dokFile = path.join(dir, 'Dockerfile');
-                fs.access(dokFile, fs.constants.F_OK, (err) => {
-                    if (err) {
-                        res.status(400).send(err);
-                    } else {
-                        res.status(200).send("Success");
-                    }
-                });
-            })
+            const regex = /^(https?:\/\/)?(www\.)?github\.com\/[^\s/]+\/[^\s/]+$/;
+            if(regex.test(pipe.script)){
+                const dir = path.join(__dirname, '..', 'projects', req.body.name);
+                simpleGit().clone(pipe.script, dir).then(() => {
+                    const dokFile = path.join(dir, 'Dockerfile');
+                    fs.access(dokFile, fs.constants.F_OK, (err) => {
+                        if (err) {
+                            res.status(400).send(err);
+                        } else {
+                            res.status(200).send("Success");
+                        }
+                    });
+                })
+            }else{
+                res.status(400).send("Not a Valid GitHub Url");
+            }
         }
         else{
             const dir = path.join(__dirname, '../projects', req.body.name);
